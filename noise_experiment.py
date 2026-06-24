@@ -60,7 +60,7 @@ def main():
 
     # The following parameters can be altered.
     n = 6
-    s = 2. # Make sure n > 2s
+    s = 2 # Make sure n > 2s
     min_noise = 1e-10
     max_noise = 1e-2
     noise_interval_count = 10
