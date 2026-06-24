@@ -3,7 +3,7 @@
 1. Clone the repo and navigate to the project folder:
 ```bash
 git clone https://github.com/SoyIsrael/dft-sparse-recovery.git
-cd DFT-compressive-solver
+cd dft-sparse-recovery
 ```
 
 2. Set up the virtual environment:
