@@ -24,6 +24,7 @@ class SparseSignal:
         self.x[self.support] = random_vals
 
         self.compute_dft()
+        
 
     def generate_noisy(self, noise_level=1e-6):
         """
@@ -43,12 +44,13 @@ class SparseSignal:
         self.compute_dft()
 
 
-    def compute_dft(self):
+    def compute_dft(self, s=None):
         """
         Computes the 2s DFT coefficients of the signal x
         """
-        self.dft_coefficients = np.zeros(self.n, dtype=complex)
-        for j in range(0, 2 * self.s):
+        num_coeffs = s if s is not None else self.s
+        self.dft_coefficients = np.zeros(2 * num_coeffs, dtype=complex)
+        for j in range(0, 2 * num_coeffs):
             sum = 0
             for k in range(self.n):
                 sum += self.x[k] * np.exp(-2j * np.pi * k * j / self.n)
@@ -87,8 +89,19 @@ class DFTSolver:
     def solve_system(self):
         """
         Solves the equation formed in the method form_system. The equation is as follows: M * (q_hat) = b where we solve for q_hat.
+        
+        Expected error: When running sparsity_mismatch_experiment.py, under-sparse signals can cause the np.linalg.solve() to fail due to no unique solution.
         """
-        self.q_hat = np.linalg.solve(self.M, self.b)
+
+        try:
+            self.q_hat = np.linalg.solve(self.M, self.b)
+        except np.linalg.LinAlgError as e:
+            print("\nSolve failed:")
+            print(e)
+            print("\n--- Matrix Diagnostics ---")
+            print("M shape:", self.M.shape)
+            print("M rank :", np.linalg.matrix_rank(self.M))
+            print("det(M) :", np.linalg.det(self.M))
 
     def reconstruct_q(self):
         """
@@ -156,7 +169,9 @@ class Verifier:
         Checks that every element in the recovered signal is within a specific magnitude range from the original signal.
         """
         if np.allclose(self.original, self.recovered, atol=1e-6) == True:
-            print("Near equality check PASSED")
+            print("Pass: Near equality check")
+        else:
+            print("FAIL: Near equality check")
 
     def error(self):
         """

@@ -22,3 +22,8 @@ python3 solver.py
 ```bash
 python3 noise_experiment.py
 ```
+
+5. Run the sparsity mismatch experiment:
+```bash
+python3 sparsity_mismatch_experiment.py
+```
