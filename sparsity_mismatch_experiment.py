@@ -45,8 +45,8 @@ class SparsityMismatchExperiment:
 def main():
     # The following parameters can be edited:
     n = 20
-    s = 3
-    true_s = 2
+    s = 5
+    true_s = 5
     trials = 100
 
     experiment = SparsityMismatchExperiment(

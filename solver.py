@@ -94,7 +94,11 @@ class DFTSolver:
         """
 
         try:
-            self.q_hat = np.linalg.solve(self.M, self.b)
+            result, _, _, _ = np.linalg.lstsq(self.M, self.b, rcond=None)
+            self.q_hat = result
+
+            # This was the old method used to solve the system. It requires a unique solution to exist.
+            # self.q_hat = np.linalg.solve(self.M, self.b)
         except np.linalg.LinAlgError as e:
             print("\nSolve failed:")
             print(e)
@@ -184,7 +188,7 @@ def main():
     """
     Calls the above classes to be ran for an s-sparse vector generated below.
     """
-    n = 6
+    n = 10
     s = 2
 
     signal = SparseSignal(n, s)
