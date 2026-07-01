@@ -27,3 +27,8 @@ python3 noise_experiment.py
 ```bash
 python3 sparsity_mismatch_experiment.py
 ```
+
+6. Run the extra measurements experiment:
+```bash
+python3 extra_measurements_experiment.py
+```

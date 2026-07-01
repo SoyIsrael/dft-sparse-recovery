@@ -60,9 +60,10 @@ class DFTSolver:
     """
     Regenerates and stores a signal from inputted DFT coefficients.
     """
-    def __init__(self, n, s, dft_coeffs):
+    def __init__(self, n, s, dft_coeffs, true_s=None):
         self.n = n
         self.s = s
+        self.true_s = true_s if true_s is not None else s
         self.dft_coeffs = dft_coeffs
         self.M = None
         self.b = None
@@ -82,6 +83,9 @@ class DFTSolver:
         for row in range(self.s):
             for col in range(self.s):
                 self.M[row][col] = self.dft_coeffs[self.s - 1 + row - col]
+        if np.linalg.matrix_rank(self.M) < self.s:
+            print(f"rank={np.linalg.matrix_rank(self.M)}, size={self.s}")
+
         
         for i in range(self.s):
             self.b[i] = -self.dft_coeffs[self.s + i]
@@ -131,17 +135,17 @@ class DFTSolver:
         q_magnitudes = np.zeros(self.n)
         for t in range(self.n):
             q_magnitudes[t] = abs(self.q[t])
-        self.support = np.argsort(q_magnitudes)[0:self.s]
+        self.support = np.argsort(q_magnitudes)[0:self.true_s]
 
     def recover_x(self):
         """
         Using the calculated support of x, it forms a s * s system of equations which is solved to recover x.
         """
-        a = self.dft_coeffs[0:self.s]
-        B = np.zeros((self.s, self.s), dtype=complex)
+        a = self.dft_coeffs[0:self.true_s]
+        B = np.zeros((self.true_s, self.true_s), dtype=complex)
 
-        for row in range(self.s):
-            for col in range(self.s):
+        for row in range(self.true_s):
+            for col in range(self.true_s):
                 B[row][col] = np.exp(-2j * np.pi * self.support[col] * row / self.n)
         c = np.linalg.solve(B, a)
         

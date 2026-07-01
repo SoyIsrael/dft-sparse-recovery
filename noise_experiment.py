@@ -63,7 +63,7 @@ def main():
     s = 2 # Make sure n > 2s
     min_noise = 1e-10
     max_noise = 1e-2
-    noise_interval_count = 10
+    noise_interval_count = 100
     runs_per_noise_level = 5
 
     experiment = NoiseExperiment(n,s,min_noise,max_noise,noise_interval_count,runs_per_noise_level)
