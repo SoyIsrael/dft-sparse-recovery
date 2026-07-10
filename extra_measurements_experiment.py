@@ -17,7 +17,7 @@ class ExtraMeasurementsExperiment:
     def run(self):
         errors = []
         r_values = []
-        for r in range(self.r_max):
+        for r in range(0, self.r_max, 1):
             r_values.append(r)
             signal_errors = []
             for i in range(self.trials):
@@ -34,17 +34,18 @@ class ExtraMeasurementsExperiment:
         
         plt.plot(r_values, errors, 'o')
         plt.xlabel("R values")
-        plt.ylabel("Average Error")
+        plt.yscale("log")
+        plt.ylabel("Average Error (||x_original - x_new|| / ||x_original||)")
         plt.title("R value vs Error")
         plt.show()
 
 
 def main():
     # Feel free to adjust the following parameters:
-    n = 60
-    s = 3
-    trials = 2000
-    r_max = 10
+    n = 100
+    s = 5
+    trials = 1000
+    r_max = 17
 
     experiment = ExtraMeasurementsExperiment(n, s, trials, r_max)
     experiment.run()

@@ -47,9 +47,24 @@ class NoiseExperiment:
 
         plt.plot(noise_levels, errors)
         plt.xlabel("Noise Level")
-        plt.ylabel("Average Error")
+        plt.ylabel("Average Error (||x_original - x_new|| / ||x_original||)")
         plt.xscale("log")
         plt.title("Noise Level vs Recovery Error")
+        plt.show()
+    
+    def plot_histogram(self, noise_level, trials=1000, ):
+        errors = []
+        for i in range(trials):
+            signal = SparseSignal(self.n, self.s)
+            signal.generate_noisy(noise_level=noise_level)
+            solver = DFTSolver(self.n, self.s, signal.dft_coefficients)
+            solver.solve()
+            verifier = Verifier(signal.x, solver.x_recovered)
+            errors.append(verifier.error())
+        plt.hist(errors, bins=50)
+        plt.xlabel("Average Error (||x_original - x_new|| / ||x_original||)")
+        plt.xlim(0, np.percentile(errors, 99.9))
+        plt.ylabel("Frequency")
         plt.show()
 
 
@@ -59,7 +74,7 @@ def main():
     """
 
     # The following parameters can be altered.
-    n = 6
+    n = 10
     s = 2 # Make sure n > 2s
     min_noise = 1e-10
     max_noise = 1e-2
@@ -68,6 +83,9 @@ def main():
 
     experiment = NoiseExperiment(n,s,min_noise,max_noise,noise_interval_count,runs_per_noise_level)
     experiment.run()
+
+    # Seperate experiment at one set noise_level
+    experiment.plot_histogram(trials=10000, noise_level=1e-1)
 
 if __name__ == "__main__":
     main()

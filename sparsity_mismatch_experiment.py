@@ -46,7 +46,7 @@ def main():
     # The following parameters can be edited:
     n = 20
     s = 5
-    true_s = 5
+    true_s = 3
     trials = 100
 
     experiment = SparsityMismatchExperiment(

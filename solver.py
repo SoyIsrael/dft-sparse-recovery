@@ -23,6 +23,9 @@ class SparseSignal:
         random_vals = np.random.randint(1, 10, size=self.s) + 1j * np.random.randint(1, 10, size=self.s)
         self.x[self.support] = random_vals
 
+        # Normalizing x so that ||x|| = 1
+        self.x = self.x / np.linalg.norm(self.x)
+
         self.compute_dft()
         
 
@@ -35,8 +38,12 @@ class SparseSignal:
         non_sparse_idxs = np.random.choice(self.n, self.s, replace=False)
         self.support = non_sparse_idxs
 
-        random_vals = np.random.randint(1, 10, size=self.s) + 1j * np.random.randint(1, 10, size=self.s)
+        random_vals = np.random.normal(0, 1, size=self.s)
+        # random_vals = np.random.randint(1, 10, size=self.s) + 1j * np.random.randint(1, 10, size=self.s)
         self.x[self.support] = random_vals
+
+        # Normalizing x so that ||x|| = 1
+        self.x = self.x / np.linalg.norm(self.x)
 
         # Adding random noise to every element
         self.x += np.random.normal(0, noise_level, self.n) + 1j * np.random.normal(0, noise_level, self.n)
@@ -186,7 +193,7 @@ class Verifier:
         Returns the L2 norm difference between the recovered and original signal.
         """
         #print(np.linalg.norm(self.recovered - self.original))
-        return np.linalg.norm(self.recovered - self.original)
+        return np.linalg.norm(self.recovered - self.original) / np.linalg.norm(self.original)
 
 def main():
     """
